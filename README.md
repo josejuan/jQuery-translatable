@@ -20,8 +20,8 @@ You must to define two REST url:
 
     1.4. Example result:
 
-            *HTTP GET:* http://server.com/translatable/list
-            *RESPONSE:* [{"name":"English","id":1,"isoCode":"en"},{"name":"Spanish","id":2,"isoCode":"es"},{"name":"French","id":3,"isoCode":"fr"}]
+            HTTP GET: http://server.com/translatable/list
+            RESPONSE: [{"name":"English","id":1,"isoCode":"en"},{"name":"Spanish","id":2,"isoCode":"es"},{"name":"French","id":3,"isoCode":"fr"}]
 
 2. "Translation", with three arguments:
 
@@ -33,21 +33,16 @@ You must to define two REST url:
 
     2.4. with PUT HTTP method you must store the provided content into key {langIsoCode, termType, termUID}. The JSON object is:
 
-             * "langId", same as [1.1]. Not used here.
+            { "langId": 1                        // same as [1.1]. Not used here.
+            , "termId": 2                        // same as a internal "termUID" key. Not used here.
+            , "translation": "This is some text" // text to store.
+            }
      
-             * "termId", same as a internal "termUID" key. Not used here.
+         A example POST:
      
-             * "translation", text to store.
-     
-             * A example POST:
-     
-                     HTTP POST: http://server.com/translatable/en/TOWERNAME/1
-     
-                     POST DATA: {"langId":0,"termId":0,"translation":"Tower of London!"}
-     
-                     RESPONSE: {"result":"ok"}
-     
-                     response could be one error message.
+            HTTP POST: http://server.com/translatable/en/TOWERNAME/1
+            POST DATA: {"langId":0,"termId":0,"translation":"Tower of London!"}
+            RESPONSE: {"result":"ok"} // response could be one error message.
 
     2.5. with GET HTTP method you must return the previously stored content.
 
