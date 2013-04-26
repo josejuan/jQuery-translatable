@@ -75,6 +75,42 @@ If you have two product ( **A** and **B** ), each product have her own "termUID"
 
 Really, the "termUID" could be the primary key of that element (if you define "termType"!).
 
+### Recommendations
+
+"termType" is very useful to me. You can define your "translatable entities" schema independently of specific primary keys (easily).
+
+You can define a normalized hierarchy:
+
+    System.Page.HomePage
+    System.Page.CustomerProfile
+    ...
+    DataBase.Product.Name
+    DataBase.Product.Description
+    ...
+
+Then, "termUID" could be generated:
+
+    System.Page.HomePage
+        Title
+        Description
+        KeyWords
+
+    System.Page.CustomerProfile
+        Title
+        Description
+        KeyWords
+
+    ...
+
+    DataBase.Product.Name
+        <primary key Product table>
+
+    DataBase.Product.Description
+        <primary key Product table>
+        
+    ...
+
+
 ## How to use at server runtime
 
 The minimal persistent schema is:
