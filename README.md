@@ -71,7 +71,7 @@ Really, this differentiation is not needed, but is useful to me (and prevent key
 
 That subkey, store the specific element to be translated.
 
-If you have two product (**A** and **B**), each product have her own "termUID".
+If you have two product ( **A** and **B** ), each product have her own "termUID".
 
 Really, the "termUID" could be the primary key of that element (if you define "termType"!).
 
