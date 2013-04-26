@@ -29,43 +29,43 @@ You must to define two REST url:
 
 2. "Translation", with three arguments:
 
-     2.1. "langIsoCode", same value as [1.3].
+    2.1. "langIsoCode", same value as [1.3].
 
-     2.2. "termType", is a group key, you can see as "entities" to be translated (eg. ProductName, ProductDescription, UserDescription, ...)
+    2.2. "termType", is a group key, you can see as "entities" to be translated (eg. ProductName, ProductDescription, UserDescription, ...)
 
-     2.3. "termUID", is a mapping key, you can see as "record" to be translated (eg. product code "123", user code "456", ...)
+    2.3. "termUID", is a mapping key, you can see as "record" to be translated (eg. product code "123", user code "456", ...)
 
-     2.4. with PUT HTTP method you must store the provided content into key {langIsoCode, termType, termUID}. The JSON object is:
+    2.4. with PUT HTTP method you must store the provided content into key {langIsoCode, termType, termUID}. The JSON object is:
 
-            2.4.1. "langId", same as [1.1]. Not used here.
+        2.4.1. "langId", same as [1.1]. Not used here.
 
-            2.4.2. "termId", same as a internal "termUID" key. Not used here.
+        2.4.2. "termId", same as a internal "termUID" key. Not used here.
 
-            2.4.3. "translation", text to store.
+        2.4.3. "translation", text to store.
 
-            2.4.4. A example POST:
+        2.4.4. A example POST:
 
-                    HTTP POST: http://server.com/translatable/en/TOWERNAME/1
+                HTTP POST: http://server.com/translatable/en/TOWERNAME/1
 
-                    POST DATA: {"langId":0,"termId":0,"translation":"Tower of London!"}
+                POST DATA: {"langId":0,"termId":0,"translation":"Tower of London!"}
 
-                    RESPONSE: {"result":"ok"}
+                RESPONSE: {"result":"ok"}
 
-                  response could be one error message.
+              response could be one error message.
 
-     2.5. with GET HTTP method you must return the previously stored content.
+    2.5. with GET HTTP method you must return the previously stored content.
 
-            2.5.1. "langId", same as [1.1]. Not used here.
+        2.5.1. "langId", same as [1.1]. Not used here.
 
-            2.5.2. "termId", same as a internal "termUID" key. Not used here.
+        2.5.2. "termId", same as a internal "termUID" key. Not used here.
 
-            2.5.3. "translation", text to store.
+        2.5.3. "translation", text to store.
 
-            2.5.4. A example GET:
+        2.5.4. A example GET:
 
-                    HTTP GET: http://server.com/translatable/en/TOWERNAME/1
+                HTTP GET: http://server.com/translatable/en/TOWERNAME/1
 
-                    RESPONSE: {"translation":"Tower of London!"}
+                RESPONSE: {"translation":"Tower of London!"}
 
 How to use at server runtime
 ----------------------------
