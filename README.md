@@ -53,6 +53,28 @@ You must to define two REST url:
 
 ## How it works
 
+Any translatable element has one unique key to be identified.
+
+But I think is better split that key into two subkeys.
+
+### Terms Types
+
+The first subkey is a group, class, kind, ... describing term type.
+
+As "termType", the subkey "Product" is not valid because a product has many subterms: name, description, usage, ...
+
+Then, you must define different "termType" for each one: "ProductName", "ProductDescription", "ProductUsage", ...
+
+Really, this differentiation is not needed, but is useful to me (and prevent key content collisions).
+
+### Terms UID
+
+That subkey, store the specific element to be translated.
+
+If you have two product (**A** and **B**), each product have her own "termUID".
+
+Really, the "termUID" could be the primary key of that element (if you define "termType"!).
+
 ## How to use at server runtime
 
 The minimal persistent schema is:
@@ -64,7 +86,10 @@ The minimal persistent schema is:
 
     TERM:
     id            primary key
-    termType      text unique
+    termType      text
+    termUID       text
+
+        Unique (termType, termID)
 
     TRANSLATION:
     id            primary key
@@ -77,6 +102,7 @@ but yes, you can use the super-minimal (not recommended) schema:
     TRANSLATION:
     isoCode       char(2)     on primary key
     termType      text        on primary key
+    termUID       text        on primary key
     translation   text
 
 with that information, you can translate **ALL** your application translatable content.
@@ -115,10 +141,10 @@ for example
 
 then, you can initialize all translatable controls (only needed in "editing translations mode", not in "only translating mode") with something like
 
-        $("*").filter(function(){return $(this).data("translatable") == "translatable"}).tflang("translatable");
-        $("*").filter(function(){return $(this).data("translatable") == "updatable"}).tflang("updatable");
-
-
-
-## How to use "termType" and "termUID"
-
+        var initTranslatable = function(mode) {
+            $("*").
+              filter(function(){return $(this).data("translatable") == mode}).
+              translatable(mode);
+        };
+        initTranslatable("translatable");
+        initTranslatable("updatable");
