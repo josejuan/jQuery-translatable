@@ -89,3 +89,8 @@ but yes, you can use the super-minimal (not recommended) schema:
     isoCode       char(2)     on primary key
     termType      text        on primary key
     translation   text
+
+with that information, you can translate *ALL* your application translatable content.
+
+How to use "termType" and "termUID"
+-----------------------------------
