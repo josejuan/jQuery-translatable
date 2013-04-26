@@ -6,6 +6,8 @@
 
 "jQuery-translatable" is a simple jQuery plugin to define certain HTML content as "translatable", that is, a user could edit certain HTML pieces to write one content version for each language configured.
 
+A demo is available (probably, I work a lot and maybe I'm working now in that demo... :P ) [here](http://yesod-testing.computer-mind.com/static/ajaxTest.html "jQuery-translatable demo").
+
 ## What do you need to use it?
 
 You must to define two REST url:
