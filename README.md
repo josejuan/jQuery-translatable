@@ -88,7 +88,7 @@ You can define a normalized hierarchy:
     DataBase.Product.Description
     ...
 
-Then, "termUID" could be generated:
+Then, many "termUID" could be generated for each "termType":
 
     System.Page.HomePage
         Title
@@ -107,9 +107,18 @@ Then, "termUID" could be generated:
 
     DataBase.Product.Description
         <primary key Product table>
-        
+
     ...
 
+### Working modes
+
+You only should use "jQuery-translatable" when you wish to grant users to edit translatable content (that is, when users are translating).
+
+Moreover, you should protect REST url to prevent unauthorized modifications into your translations database.
+
+Then, in "only translating mode" you only render your text controls using the translations database.
+
+Only in "editing translations mode" you will include "jQuery-translatable" and initialize translatable controls (see below).
 
 ## How to use at server runtime
 
@@ -163,7 +172,8 @@ All HTML control that you wish to be translatable must be initialized.
 
 Currently, the only one way is to call:
 
-        $(some-element).translatable('init')
+        $(some-element).translatable('translatable') // if you wish the control have be editable
+        $(some-element).translatable('updatable')    // the control have not be editable (only update if another control with same keys is editable)
 
 at server runtime, you can add three html attributes to your elements
 
