@@ -51,6 +51,8 @@ You must to define two REST url:
                 HTTP GET: http://server.com/translatable/en/TOWERNAME/1
                 RESPONSE: {"translation":"Tower of London!"}
 
+## How it works
+
 ## How to use at server runtime
 
 The minimal persistent schema is:
@@ -77,8 +79,46 @@ but yes, you can use the super-minimal (not recommended) schema:
     termType      text        on primary key
     translation   text
 
-with that information, you can translate *ALL* your application translatable content.
+with that information, you can translate **ALL** your application translatable content.
+
+### Server runtime in "only translating mode"
+
+You can use your translated data directly.
+
+Use some database cache is recommended.
+
+To internationalize your control, you can use your framework infrastructure (if any).
+
+For example, in [Yesod Web Framework](http://www.yesodweb.com/ "Yesod") you could overload **_{MsgUserMessage}** to read translated data from database.
+
+If using Microsoft .Net you could define a [Resource Provider](http://msdn.microsoft.com/en-us/library/aa905797.aspx "Extending the ASP.NET 2.0 Resource-Provider Model") to use translated text in a Microsoft compliant way.
+
+You can, of course, define you own function to read (and caching) data from database.
+
+### Server runtime in "editing translations mode"
+
+All HTML control that you wish to be translatable must be initialized.
+
+Currently, the only one way is to call:
+
+        $(some-element).translatable('init')
+
+at server runtime, you can add three html attributes to your elements
+
+* "data-translatable", with "updatable" or "translatable".
+* "data-translatableType", with the "termType" code.
+* "data-translatableUID", with the "termUID" code.
+
+for example
+
+        <h4 data-translatable="translatable" data-translatableType="SYSTEMMESSAGE" data-translatableUID="TOWERSOURCEURL" />
+
+then, you can initialize all translatable controls (only needed in "editing translations mode", not in "only translating mode") with something like
+
+        $("*").filter(function(){return $(this).data("translatable") == "translatable"}).tflang("translatable");
+        $("*").filter(function(){return $(this).data("translatable") == "updatable"}).tflang("updatable");
+
+
 
 ## How to use "termType" and "termUID"
-
 
