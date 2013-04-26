@@ -46,35 +46,25 @@ You must to define two REST url:
 
     2.5. with GET HTTP method you must return the previously stored content.
 
-        * "langId", same as [1.1]. Not used here.
-
-        * "termId", same as a internal "termUID" key. Not used here.
-
-        * "translation", text to store.
-
-        * A example GET:
+         A example GET:
 
                 HTTP GET: http://server.com/translatable/en/TOWERNAME/1
-
                 RESPONSE: {"translation":"Tower of London!"}
 
 ## How to use at server runtime
 
 The minimal persistent schema is:
 
-    LANG
-    ----
+    LANG:
     id            primary key
     isoCode       char(2) unique
     name          text
 
-    TERM
-    ----
+    TERM:
     id            primary key
     termType      text unique
 
-    TRANSLATION
-    -----------
+    TRANSLATION:
     id            primary key
     lang_id       foreign key (LANG.id)
     term_id       foreign key (TERM.id)
@@ -82,8 +72,7 @@ The minimal persistent schema is:
 
 but yes, you can use the super-minimal (not recommended) schema:
 
-    TRANSLATION
-    -----------
+    TRANSLATION:
     isoCode       char(2)     on primary key
     termType      text        on primary key
     translation   text
