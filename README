@@ -58,6 +58,34 @@ You must to define two REST url:
             HTTP GET: http://server.com/translatable/en/TOWERNAME/1
 
             RESPONSE: {"translation":"Tower of London!"}
-            
 
+How to use at server runtime
+----------------------------
 
+The minimal persistent schema is:
+
+    LANG
+    ----
+    id            primary key
+    isoCode       char(2) unique
+    name          text
+
+    TERM
+    ----
+    id            primary key
+    termType      text unique
+
+    TRANSLATION
+    -----------
+    id            primary key
+    lang_id       foreign key (LANG.id)
+    term_id       foreign key (TERM.id)
+    translation   text
+
+but yes, you can use the super-minimal (not recommended) schema:
+
+    TRANSLATION
+    -----------
+    isoCode       char(2)     on primary key
+    termType      text        on primary key
+    translation   text
