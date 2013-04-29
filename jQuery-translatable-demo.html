@@ -1,0 +1,162 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Translatable test!</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="http://code.jquery.com/jquery-1.9.1.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" type="text/javascript"></script>
+    <script src="jQuery-translatable.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="css/style.css" />
+     <style>
+      .ui-tabs-vertical { width: 55em; }
+      .ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
+      .ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; }
+      .ui-tabs-vertical .ui-tabs-nav li a { display:block; }
+      .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-right-width: 1px; }
+      .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
+      
+      
+      .translatable-updatable {
+      }
+      .translatable-translatable {
+        cursor: pointer;
+      }
+      .translatable-translatable:hover {
+        border: 1px solid lightgray;
+        background-color: lightgray;
+        background-image: url(css/edit.png);
+        background-position: right top;
+        background-repeat: no-repeat;
+      }
+    </style>
+    <script type="text/javascript">
+
+      var db = [
+        {id: 1
+        ,imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Tower_of_London%2C_April_2006.jpg/300px-Tower_of_London%2C_April_2006.jpg"
+        ,sourceUrl: "https://en.wikipedia.org/wiki/Tower_of_London"},
+        {id: 2
+        ,imageUrl: "http://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Sky_Tower_at_night.jpg/200px-Sky_Tower_at_night.jpg"
+        ,sourceUrl: "http://es.wikipedia.org/wiki/Sky_Tower"},
+        {id: 3
+        ,imageUrl: "http://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Sears_Tower_ss.jpg/220px-Sears_Tower_ss.jpg"
+        ,sourceUrl: "http://es.wikipedia.org/wiki/Sears_Tower"},
+        {id: 4
+        ,imageUrl: "http://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tokyo_Sky_Tree_2012_%E2%85%A3.JPG/220px-Tokyo_Sky_Tree_2012_%E2%85%A3.JPG"
+        ,sourceUrl: "http://en.wikipedia.org/wiki/Tokyo_Skytree"},
+        {id: 5
+        ,imageUrl: "http://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Canton_tower_in_asian_games_opening_ceremony.jpg/250px-Canton_tower_in_asian_games_opening_ceremony.jpg"
+        ,sourceUrl: "http://en.wikipedia.org/wiki/Canton_Tower"},
+        {id: 6
+        ,imageUrl: "http://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Toronto_-_ON_-_Toronto_Harbourfront7.jpg/220px-Toronto_-_ON_-_Toronto_Harbourfront7.jpg"
+        ,sourceUrl: "http://en.wikipedia.org/wiki/CN_Tower"}
+      ];
+
+      function formatTab() {
+        return $('<li/>').
+                 append(
+                   $('<a/>').
+                     attr('href', '#data' + this.id).
+                     translatable('updatable', this.id, 'TOWERNAME')
+                 );
+      }
+      function formatForm() {
+        return $('<div/>').
+                 attr('id', 'data' + this.id).
+                 append(
+                   $('<img/>').
+                     css('float', 'right').
+                     css('max-height', 250).
+                     css('max-width', 150).
+                     css('margin', 10).
+                     attr('src', this.imageUrl)
+                 ).
+                 append(
+                   $('<h1/>').
+                     css('margin-top', 0).
+                     translatable('translatable', this.id, 'TOWERNAME')
+                 ).
+                 append(
+                   $('<a/>').
+                     attr('href', this.sourceUrl).
+                     translatable('updatable', 'TOWERSOURCEURL', 'SYSTEMMESSAGE')
+                 ).
+                 append(
+                   $('<p/>').
+                     css('font-style', 'italic').
+                     css('text-align', 'justify').
+                     translatable('translatable', this.id, 'TOWERDESCRIPTION')
+                 );
+      }
+      
+      // superminimal database schema
+      var testingDB = {};
+      function testing_Key(langISO, termType, termID) {
+        return langISO + '|' + termType + '|' + termID;
+      }
+      function testing_langListReader(callBack) {
+        var langList = [{"name":"English","id":1,"isoCode":"en"}
+                       ,{"name":"Spanish","id":2,"isoCode":"es"}
+                       ,{"name":"French","id":3,"isoCode":"fr"}];
+        if(callBack)
+          callBack(langList);
+        return langList;
+      }
+      function testing_translatableReader(langISO, termType, termID, callBack) {
+        var key = testing_Key(langISO, termType, termID);
+        var result = testingDB[key] || "";
+        if(callBack)
+          callBack(result);
+        return result;
+      }
+      function testing_translatableWriter(langISO, termType, termID, translation, callBack) {
+        var key = testing_Key(langISO, termType, termID);
+        testingDB[key] = {langId: 0, termId: 0, translation: translation};
+        var result = {result:"ok"};
+        if(callBack)
+          callBack(result);
+        return result;
+      }
+
+      $(function() {
+      
+        $.translatable('bypassREST',
+          testing_langListReader,
+          testing_translatableReader,
+          testing_translatableWriter
+        );
+        
+        var $db = $(db);
+        $('#content').
+          append( $('<ul />').append( $db.map(formatTab).get() ) ).
+          append( $db.map(formatForm).get() ).
+          tabs().
+          addClass( "ui-tabs-vertical ui-helper-clearfix" ).
+          find('li').
+            removeClass( "ui-corner-top" ).
+            addClass( "ui-corner-left" );
+    
+        $('#lang').
+          change(function() {
+            $.translatable('lang', $(this).val());
+            $.translatable('updateAll');
+          });
+        
+        $('*').filter(function(){return $(this).data('translatable') == 'translatable'}).translatable('translatable');
+      });
+    </script>
+</head>
+<body>
+  Current language: <select id="lang">
+  <option value="en">English</option>
+  <option value="es">Spanish</option>
+  <option value="fr">French</option>
+  </select>
+  <div id="content"></div>
+  <br style="clear: both" />
+  <h2>System messages</h2>
+  <h4 data-translatable="translatable" data-translatabletype="SYSTEMMESSAGE" data-translatableuid="TOWERSOURCEURL" />
+</body>
+</html>
