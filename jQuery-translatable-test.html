@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>jQuery-translatable testing</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="http://code.jquery.com/jquery-1.9.1.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" type="text/javascript"></script>
+    <script src="jQuery-translatable.js" type="text/javascript"></script>
+    <script src="jQuery-translatable-database-mockup.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="text/javascript">
+      $(function() {
+        var $db = $(db);
+        $('#content').
+          append( $('<ul />').append( $db.map(formatTab).get() ) ).
+          append( $db.map(formatForm).get() ).
+          tabs().
+          addClass( "ui-tabs-vertical ui-helper-clearfix" ).
+          find('li').
+            removeClass( "ui-corner-top" ).
+            addClass( "ui-corner-left" );
+        $('#lang').
+          change(function() {
+            $.translatable('lang', $(this).val());
+            $.translatable('updateAll');
+          });
+        $('*').filter(function(){return $(this).data('translatable') == 'translatable'}).translatable('translatable');
+      });
+    </script>
+</head>
+<body>
+  Current language: <select id="lang">
+  <option value="en">English</option>
+  <option value="es">Spanish</option>
+  <option value="fr">French</option>
+  </select>
+  <div id="content"></div>
+  <br style="clear: both" />
+  <h2>System messages</h2>
+  <h4 data-translatable="translatable" data-translatabletype="SYSTEMMESSAGE" data-translatableuid="TOWERSOURCEURL" />
+</body>
+</html>
