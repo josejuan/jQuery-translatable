@@ -10,35 +10,117 @@
     <script src="jQuery-translatable-database-mockup.js" type="text/javascript"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <script type="text/javascript">
-      $(function() {
-        var $db = $(db);
-        $('#content').
-          append( $('<ul />').append( $db.map(formatTab).get() ) ).
-          append( $db.map(formatForm).get() ).
-          tabs().
-          addClass( "ui-tabs-vertical ui-helper-clearfix" ).
-          find('li').
-            removeClass( "ui-corner-top" ).
-            addClass( "ui-corner-left" );
-        $('#lang').
-          change(function() {
-            $.translatable('lang', $(this).val());
-            $.translatable('updateAll');
-          });
-        $('*').filter(function(){return $(this).data('translatable') == 'translatable'}).translatable('translatable');
-      });
-    </script>
+    <link rel="stylesheet" href="qunit/qunit-1.11.0.css">
 </head>
 <body>
-  Current language: <select id="lang">
-  <option value="en">English</option>
-  <option value="es">Spanish</option>
-  <option value="fr">French</option>
-  </select>
-  <div id="content"></div>
-  <br style="clear: both" />
-  <h2>System messages</h2>
-  <h4 data-translatable="translatable" data-translatabletype="SYSTEMMESSAGE" data-translatableuid="TOWERSOURCEURL" />
+  <div id="sandbox">
+    <table>
+      <tr>
+        <th>UPDATABLE1</th>
+        <td id="A" data-translatable="updatable" data-translatabletype="TESTING1" data-translatableuid="KEY1">&nbsp;</td>
+      </tr>
+      <tr>
+        <th>UPDATABLE2</th>
+        <td id="B" data-translatable="updatable" data-translatabletype="TESTING2" data-translatableuid="KEY1">&nbsp;</td>
+      </tr>
+      <tr>
+        <th>TRANSLATABLE1</th>
+        <td id="C" data-translatable="translatable" data-translatabletype="TESTING1" data-translatableuid="KEY1">&nbsp;</td>
+      </tr>
+      <tr>
+        <th>TRANSLATABLE2</th>
+        <td id="D" data-translatable="translatable" data-translatabletype="TESTING2" data-translatableuid="KEY1">&nbsp;</td>
+      </tr>
+    </table>
+  </div>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+    <script src="qunit/qunit-1.11.0.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+      var ka = "en|TESTING1|KEY1";
+      var kb = "es|TESTING2|KEY1";
+      var ta = "Some text!";
+      var tb = "¡Cierto texto!";
+      var tc = "Another one!";
+
+      test('setMockupValues', function() {
+        testingDB[ka] = {langId: 0, termId: 0, translation: ta};
+        testingDB[kb] = {langId: 0, termId: 0, translation: tb};
+        ok(testingDB[ka].translation == ta, "English text stored");
+        ok(testingDB[kb].translation == tb, "spanish text stored");
+      });
+
+      asyncTest('initControls', function() {
+        expect(4);
+    
+        // load is made concurrently
+        $.translatable('initControls');
+
+        setTimeout(function() {
+          ok($('#A').text().trim() == ta, "A key checked");
+          ok($('#B').text().trim() == "TESTING2:KEY1", "B key checked");
+          ok($('#C').text().trim() == ta, "C key checked");
+          ok($('#D').text().trim() == "TESTING2:KEY1", "D key checked");
+          start();
+        }, 500);
+      
+      });
+      
+      test('noModal', function() {
+        ok($('#lang1').find('textarea').length == 0, "No modal");
+      });
+      
+      test('showModal', function() {
+        expect(1);
+        $('#D').on('click', function() {
+          ok($('#lang1').find('textarea').length == 1, "Modal");
+        });
+        $('#D').trigger('click');
+      });
+      
+      asyncTest('saveChanges', function() {
+        expect(1);
+        setTimeout(function() {
+          var $t = $('#lang1').find('textarea');
+          ok($t.length == 1, "Text area exists");
+          $t.val(tc);
+          $t.trigger('change');
+          var $s = $('.ui-button-text:contains(Save)');
+          $s.trigger('click');
+          start();
+        }, 500);
+      });
+      
+      test('noModal2', function() {
+        ok($('#lang1').find('textarea').length == 0, "No modal");
+      });
+      
+      asyncTest('savedChanges', function() {
+        expect(1);
+        setTimeout(function() {
+          ok($('#B').text().trim() == tc, "D value copied to C");
+          start();
+        }, 500);
+      });
+      
+      test('changinToSpanish', function() {
+        $.translatable('lang', 'es');
+        ok($.translatable('lang') == 'es', "Language changed");
+      });
+        
+      asyncTest('updateAll', function() {
+        expect(4);
+        $.translatable('updateAll');
+        setTimeout(function() {
+          ok($('#A').text().trim() == "TESTING1:KEY1", "A key checked");
+          ok($('#B').text().trim() == tb, "B key checked");
+          ok($('#C').text().trim() == "TESTING1:KEY1", "C key checked");
+          ok($('#D').text().trim() == tb, "D key checked");
+          start();
+        }, 500);
+      });
+      
+    </script>
 </body>
 </html>

@@ -24,3 +24,10 @@ th: 1px; }
   background-repeat: no-repeat;
 }
 
+#sandbox {
+  position: absolute;
+  background-color: white;
+  border: 3px solid red;
+  right: 0px;
+  padding: 5px;
+}

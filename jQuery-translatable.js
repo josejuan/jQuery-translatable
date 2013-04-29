@@ -134,6 +134,16 @@
     configure: function(new_config) {
       config = $.extend({}, config, new_config);
     },
+    initControls: function(mode) {
+      if(mode) {
+        $("*").
+          filter(function(){return $(this).data("translatable") == mode}).
+          translatable(mode);
+      } else {
+        $.translatable('initControls', 'translatable');
+        $.translatable('initControls', 'updatable');
+      }
+    },
     get: function(termID, termType, langISO, callBack) {
       if(!langISO) langISO = config.currentLanguage;
       return _translatableReader(langISO, termType, termID, callBack);
