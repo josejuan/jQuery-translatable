@@ -23,7 +23,7 @@
     var result = "(data unavailable)";
     $.ajax({
       type: "GET",
-      url: config.translatableReader + "/" + langISO + "/" + termType + "/" + termID,
+      url: config.translatableReaderUrl + "/" + langISO + "/" + termType + "/" + termID,
       async: !!callBack,
       success: (!!callBack ? callBack : function(r){result = r})
     });
@@ -34,9 +34,9 @@
     var result = "(response unavailable)";
     $.ajax({
       type: "POST",
-      url: config.translatableReader + "/" + langISO + "/" + termType + "/" + termID,
+      url: config.translatableWriterUrl + "/" + langISO + "/" + termType + "/" + termID,
       datatype: 'json',
-      data: JSON.stringify({langId: 0, termId: 0, translation: translation}),
+      data: JSON.stringify(translation),
       async: !!callBack,
       success: (!!callBack ? callBack : function(r){result = r})
     });
@@ -131,7 +131,7 @@
   };
   
   var methods = {
-    configure: function(new_config) {
+    init: function(new_config) {
       config = $.extend({}, config, new_config);
     },
     initControls: function(mode) {

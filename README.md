@@ -33,17 +33,14 @@ You must to define two REST url:
 
     2.3. "termUID", is a mapping key, you can see as "record" to be translated (eg. product code "123", user code "456", ...)
 
-    2.4. with PUT HTTP method you must store the provided content into key {langIsoCode, termType, termUID}. The JSON object is:
+    2.4. with PUT HTTP method you must store the provided content into key {langIsoCode, termType, termUID}. The JSON object is a string:
 
-            { "langId": 1                        // same as [1.1]. Not used here.
-            , "termId": 2                        // same as a internal "termUID" key. Not used here.
-            , "translation": "This is some text" // text to store.
-            }
+            "This is some text" // text to store.
      
          A example POST:
      
             HTTP POST: http://server.com/translatable/en/TOWERNAME/1
-            POST DATA: {"langId":0,"termId":0,"translation":"Tower of London!"}
+            POST DATA: "Tower of London!"
             RESPONSE: {"result":"ok"} // response could be one error message.
 
     2.5. with GET HTTP method you must return the previously stored content.
